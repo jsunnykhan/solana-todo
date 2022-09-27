@@ -1,13 +1,12 @@
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useEffect } from "react";
-import { getProvider } from "../utils/provider";
 
 const Home: NextPage = () => {
-  useEffect(() => {
-    const provider = getProvider();
-    console.log(provider?.publicKey?.toString());
-  }, []);
+  // need to create program (idl , program_key , provider);
+  // need to create signer
+  // need to fetch idl (like abi on ethereum)
+
   return (
     <div>
       <Head>
@@ -16,7 +15,7 @@ const Home: NextPage = () => {
 
       <main>
         <div className="m-auto flex-auto justify-center items-center">
-          Solana todo list
+          <WalletMultiButton />
         </div>
       </main>
     </div>
