@@ -1,11 +1,27 @@
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-import type { NextPage } from "next";
+// import type { NextPage } from "next";
 import Head from "next/head";
+import { useTodo } from "../hooks/useTodo";
+import { todoType } from "../interface/todoInterface";
 
-const Home: NextPage = () => {
+const Home = () => {
   // need to create program (idl , program_key , provider);
   // need to create signer
   // need to fetch idl (like abi on ethereum)
+  const {
+    pendingTodo,
+    initUser,
+    addTodo,
+    markedTodo,
+    removeTodo,
+    completeTodo,
+  } = useTodo();
+
+  const checkTodo = (idx: number) => {
+    if (idx) {
+      markedTodo(idx);
+    }
+  };
 
   return (
     <div>
@@ -13,10 +29,73 @@ const Home: NextPage = () => {
         <title>Todo list</title>
       </Head>
 
-      <main>
-        <div className="m-auto flex-auto justify-center items-center">
+      <main className="px-5 py-5">
+        <div className="m-auto flex justify-between  items-center">
           <WalletMultiButton />
+
+          <button
+            onClick={() => addTodo()}
+            className="bg-violet-600 text-white py-3 px-4 rounded "
+          >
+            Add todo
+          </button>
+          <button
+            onClick={() => initUser()}
+            className="bg-violet-600 text-white py-3 px-4 rounded "
+          >
+            Initialize User
+          </button>
         </div>
+
+        {completeTodo.length ? (
+          <div>
+            <h1 className="text-lg font-bold pt-10">Todo List</h1>
+            <div className="space-y-3 pb-10 pt-5">
+              {pendingTodo?.map((data: todoType) => (
+                <div
+                  className="flex justify-between bg-slate-100 rounded px-5 py-2 items-center"
+                  key={data.publicKey.toString()}
+                >
+                  <input
+                    type="checkbox"
+                    onClick={() => checkTodo(data.account.idx)}
+                  />
+                  <h1>{data?.account?.content}</h1>
+                  <p>{data.publicKey.toString()}</p>
+                  <button
+                    onClick={() => removeTodo(data.account.idx)}
+                    className="bg-red-500 text-base text-white px-3 py-2 rounded"
+                  >
+                    Delete
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : null}
+
+        {pendingTodo.length ? (
+          <div>
+            <h1 className="text-lg font-bold pt-10">Completed Todo</h1>
+            <div className="space-y-3 pt-5 pb-10">
+              {completeTodo?.map((data: todoType) => (
+                <div
+                  className="flex justify-between bg-slate-100 rounded px-5 py-2 items-center"
+                  key={data.publicKey.toString()}
+                >
+                  <h1>{data?.account?.content}</h1>
+                  <p>{data.publicKey.toString()}</p>
+                  <button
+                    onClick={() => removeTodo(data.account.idx)}
+                    className="bg-red-500 text-base text-white px-3 py-2 rounded"
+                  >
+                    Delete
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : null}
       </main>
     </div>
   );
