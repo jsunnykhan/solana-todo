@@ -199,6 +199,36 @@ export const useTodo = () => {
     }
   };
 
+  const updateTodo = async (idx: number, content: string) => {
+    if (program && publicKey) {
+      try {
+        setTransactionPending(true);
+        const [todoPda, todBump] = findProgramAddressSync(
+          [
+            utf8.encode("TODO_STATE"),
+            publicKey.toBuffer(),
+            Uint8Array.from([idx]),
+          ],
+          program.programId
+        );
+
+        const tx = await program.methods
+          .updateTodo(idx, content)
+          .accounts({
+            authority: publicKey,
+            todoAccount: todoPda,
+            systemProgram: SystemProgram.programId,
+          })
+          .rpc();
+        console.log(tx);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setTransactionPending(false);
+      }
+    }
+  };
+
   useEffect(() => {
     if (publicKey && program && !transactionPending) {
       findTodoAccount();
@@ -213,6 +243,7 @@ export const useTodo = () => {
     addTodo,
     markedTodo,
     removeTodo,
+    updateTodo,
     completeTodo,
     pendingTodo,
   };

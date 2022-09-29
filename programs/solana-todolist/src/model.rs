@@ -96,3 +96,20 @@ pub struct RemoveTodo<'info> {
     pub system_program : Program<'info , System>
 
 }
+
+
+#[derive(Accounts)]
+#[instruction(_todo_idx:u8)]
+pub struct UpdateTodo <'info>{
+    #[account(mut)]
+    pub authority: Signer<'info>,
+    #[account(
+        mut,
+        seeds=[TODO_TAG,authority.key().as_ref(),&[_todo_idx].as_ref()],
+        bump,
+        has_one = authority
+    )]
+    pub todo_account : Box<Account<'info , TodoAccount>>,
+
+    pub system_program : Program<'info , System>
+}

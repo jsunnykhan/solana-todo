@@ -45,6 +45,18 @@ export const IDL = {
       ],
       args: [{ name: "todoIdx", type: "u8" }],
     },
+    {
+      name: "updateTodo",
+      accounts: [
+        { name: "authority", isMut: true, isSigner: true },
+        { name: "todoAccount", isMut: true, isSigner: false },
+        { name: "systemProgram", isMut: false, isSigner: false },
+      ],
+      args: [
+        { name: "todoIdx", type: "u8" },
+        { name: "content", type: "string" },
+      ],
+    },
   ],
   accounts: [
     {

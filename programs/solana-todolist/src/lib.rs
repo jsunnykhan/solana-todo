@@ -52,4 +52,11 @@ pub mod my_program {
         user_profile.todo_count = user_profile.todo_count.checked_sub(1).unwrap();
         Ok(())
     }
+
+    pub fn update_todo (ctx:Context<UpdateTodo> , _todo_idx:u8 , content :String) -> Result<()>{
+        let todo_account = &mut ctx.accounts.todo_account;
+        todo_account.content = content;
+
+        Ok(())
+    }
 }
