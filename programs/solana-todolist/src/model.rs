@@ -113,3 +113,13 @@ pub struct UpdateTodo <'info>{
 
     pub system_program : Program<'info , System>
 }
+
+
+#[derive(Accounts)]
+pub struct SolSend <'info>{
+    #[account(mut , signer)]
+    pub from : AccountInfo<'info>,
+    #[account(mut)]
+    pub to :AccountInfo<'info>,
+    pub system_program : AccountInfo<'info>
+}

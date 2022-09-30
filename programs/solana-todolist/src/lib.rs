@@ -1,4 +1,5 @@
 use anchor_lang::prelude::*;
+use anchor_lang::solana_program::program::invoke;
 
 pub mod constant;
 pub mod error;
@@ -11,7 +12,6 @@ declare_id!("84t3Rqf6KbdhtY9cTk1crG3H7CxB2dYkDa85S5waU3ka");
 
 #[program]
 pub mod my_program {
-    use anchor_lang::solana_program::entrypoint::ProgramResult;
 
     use super::*;
 
@@ -53,9 +53,27 @@ pub mod my_program {
         Ok(())
     }
 
-    pub fn update_todo (ctx:Context<UpdateTodo> , _todo_idx:u8 , content :String) -> Result<()>{
+    pub fn update_todo(ctx: Context<UpdateTodo>, _todo_idx: u8, content: String) -> Result<()> {
         let todo_account = &mut ctx.accounts.todo_account;
         todo_account.content = content;
+
+        Ok(())
+    }
+
+    pub fn send_token(ctx: Context<SolSend>, lamport: u64) -> Result<()> {
+        let ix = anchor_lang::solana_program::system_instruction::transfer(
+            ctx.accounts.from.key,
+            ctx.accounts.to.key,
+            lamport,
+        );
+
+        invoke(
+            &ix,
+            &[
+                ctx.accounts.from.to_account_info(),
+                ctx.accounts.to.to_account_info(),
+            ],
+        );
 
         Ok(())
     }
