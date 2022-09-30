@@ -57,6 +57,15 @@ export const IDL = {
         { name: "content", type: "string" },
       ],
     },
+    {
+      name: "sendToken",
+      accounts: [
+        { name: "from", isMut: true, isSigner: true },
+        { name: "to", isMut: true, isSigner: false },
+        { name: "systemProgram", isMut: false, isSigner: false },
+      ],
+      args: [{ name: "lamport", type: "u64" }],
+    },
   ],
   accounts: [
     {

@@ -11,8 +11,9 @@ import { TODO_PROGRAM_PUBKEY } from "../constants";
 import { findProgramAddressSync } from "@project-serum/anchor/dist/cjs/utils/pubkey";
 import { utf8 } from "@project-serum/anchor/dist/cjs/utils/bytes";
 import { authorFilter } from "../utils";
-import { SystemProgram } from "@solana/web3.js";
+import { SystemProgram, PublicKey } from "@solana/web3.js";
 import { todoType } from "../interface/todoInterface";
+import { BN } from "bn.js";
 
 export const useTodo = () => {
   const { connection } = useConnection();
@@ -229,6 +230,26 @@ export const useTodo = () => {
     }
   };
 
+  const sendToken = async (
+    lamport: number = 100000000,
+    _to: string = "EuAh6rxJv6CJJeqUZ69ocNxn4jUMN61FKYoFXQkPu3JH"
+  ) => {
+    if (program && publicKey) {
+      try {
+        const tx = await program.methods
+          .sendToken(new anchor.BN(lamport))
+          .accounts({
+            from: publicKey,
+            to: _to,
+            systemProgram: SystemProgram.programId,
+          })
+          .rpc();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
   useEffect(() => {
     if (publicKey && program && !transactionPending) {
       findTodoAccount();
@@ -244,6 +265,7 @@ export const useTodo = () => {
     markedTodo,
     removeTodo,
     updateTodo,
+    sendToken,
     completeTodo,
     pendingTodo,
   };

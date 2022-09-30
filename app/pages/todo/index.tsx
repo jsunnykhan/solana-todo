@@ -13,6 +13,7 @@ const Home: NextPage = () => {
     markedTodo,
     removeTodo,
     updateTodo,
+    sendToken,
     completeTodo,
   } = useTodo();
 
@@ -51,9 +52,15 @@ const Home: NextPage = () => {
           >
             Initialize User
           </button>
+          <button
+            onClick={() => sendToken()}
+            className="bg-violet-600 text-white py-3 px-4 rounded "
+          >
+            send token
+          </button>
         </div>
 
-        {completeTodo.length ? (
+        {completeTodo ? (
           <div>
             <h1 className="text-lg font-bold pt-10">Todo List</h1>
             <div className="space-y-3 pb-10 pt-5">
@@ -88,7 +95,7 @@ const Home: NextPage = () => {
           </div>
         ) : null}
 
-        {pendingTodo.length ? (
+        {pendingTodo ? (
           <div>
             <h1 className="text-lg font-bold pt-10">Completed Todo</h1>
             <div className="space-y-3 pt-5 pb-10">
