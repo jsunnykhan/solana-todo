@@ -77,4 +77,16 @@ pub mod my_program {
 
         Ok(())
     }
+
+    pub fn create_account(ctx: Context<SolSend> ,lamports: u64) -> Result<()> {
+        let ix = anchor_lang::solana_program::system_instruction::create_account(
+            ctx.accounts.from.key,
+            ctx.accounts.to.key,
+            lamports,
+            128,
+            ctx.accounts.authority.owner,
+        );
+
+        Ok(())
+    }
 }

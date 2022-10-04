@@ -117,6 +117,8 @@ pub struct UpdateTodo <'info>{
 
 #[derive(Accounts)]
 pub struct SolSend <'info>{
+    #[account(mut)]
+    pub authority : Signer<'info> ,
     #[account(mut , signer)]
     pub from : AccountInfo<'info>,
     #[account(mut)]
