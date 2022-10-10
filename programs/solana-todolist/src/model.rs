@@ -1,127 +1,22 @@
-
 use anchor_lang::prelude::*;
 
 use crate::{constant::*, state::*};
 
 
-
 #[derive(Accounts)]
 #[instruction()]
-pub struct InitializeUser<'info> {
-    
+pub struct AssosiatedTokenAccount<'info> {
     #[account(mut)]
-    pub authority: Signer<'info>,
+    pub owner: Signer<'info>,
+    #[account(init , payer=owner , seeds = [b"mint"] , bump ,space= 8 + std::mem::size_of::<MintAccount>(),)]
+    pub mint_account: Box<Account<'info, MintAccount>>,
     #[account(
         init,
-        seeds= [USER_TAG,authority.key().as_ref()],
+        seeds= [owner.key().as_ref() , mint_account.key().as_ref() , program_id.key().as_ref()],
         bump,
-        payer=authority,
-        space=8 + std::mem::size_of::<UserProfile>(),
+        payer=owner,
+        space= 8 + std::mem::size_of::<MintAccount>(),
     )]
-    pub user_profile: Box<Account<'info, UserProfile>>,
-    pub system_program: Program<'info , System>
-    
-}
-
-#[derive(Accounts)]
-#[instruction()]
-pub struct AddTodo<'info>{
-
-    #[account(
-        mut,
-        seeds= [USER_TAG,authority.key().as_ref()],
-        bump,
-        has_one = authority,
-    )]
-    pub user_profile: Box<Account<'info, UserProfile>>,
-
-    #[account(
-        init , 
-        seeds = [TODO_TAG , authority.key().as_ref(),&[user_profile.last_todo as u8].as_ref()] ,
-        bump,
-        payer = authority,
-        space = 8 + std::mem::size_of::<TodoAccount>(),
-    )]
-    pub todo_account: Box<Account<'info, TodoAccount>>,
-
-    #[account(mut)]
-    pub authority: Signer<'info>,
-
-    pub system_program : Program<'info , System>
-}
-
-#[derive(Accounts)]
-#[instruction(_todo_idx:u8)]
-pub struct  MarkTodo<'info>{
-    #[account(
-        mut , 
-        seeds=[USER_TAG, authority.key().as_ref()],
-        bump ,
-        has_one=authority
-    )]
-    pub user_profile : Box<Account<'info , UserProfile>>,
-    #[account(
-        mut , 
-        seeds = [TODO_TAG , authority.key().as_ref(),&[_todo_idx].as_ref()] ,
-        bump,
-        has_one=authority
-    )]
-    pub todo_account : Box<Account<'info , TodoAccount>>,
-    #[account(mut)]
-    pub authority : Signer<'info>,
-    pub system_program: Program<'info , System>
-
-}
-
-#[derive(Accounts)]
-#[instruction(_todo_idx:u8)] 
-pub struct RemoveTodo<'info> {
-    #[account(
-        mut,
-        seeds = [USER_TAG, authority.key().as_ref()],
-        bump,
-        has_one=authority
-    )]
-    pub user_profile:Box<Account<'info , UserProfile>>,
-    #[account(
-        mut,
-        close =authority,
-        seeds=[TODO_TAG , authority.key().as_ref(),&[_todo_idx].as_ref()],
-        bump,
-        has_one=authority
-    )]
-    pub todo_account : Box<Account<'info , TodoAccount>>,
-    #[account(mut)]
-    pub authority: Signer<'info>,
-    pub system_program : Program<'info , System>
-
-}
-
-
-#[derive(Accounts)]
-#[instruction(_todo_idx:u8)]
-pub struct UpdateTodo <'info>{
-    #[account(mut)]
-    pub authority: Signer<'info>,
-    #[account(
-        mut,
-        seeds=[TODO_TAG,authority.key().as_ref(),&[_todo_idx].as_ref()],
-        bump,
-        has_one = authority
-    )]
-    pub todo_account : Box<Account<'info , TodoAccount>>,
-
-    pub system_program : Program<'info , System>
-}
-
-
-#[derive(Accounts)]
-pub struct SolSend <'info>{
-    #[account(mut)]
-    pub authority : Signer<'info> ,
-    #[account(mut , signer)]
-    pub from : AccountInfo<'info>,
-    #[account(mut)]
-    pub to :AccountInfo<'info>,
-    pub system_program : AccountInfo<'info>
+    pub mint: Box<Account<'info, MintAccount>>,
+    pub system_program: Program<'info, System>,
 }
