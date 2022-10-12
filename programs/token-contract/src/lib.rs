@@ -1,5 +1,3 @@
-pub mod ata;
-
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token;
@@ -39,27 +37,6 @@ pub mod token_contract {
 
         Ok(())
     }
-
-    pub fn create_ata(ctx: Context<ATA>) -> Result<(Pubkey, u8)> {
-        Ok(Pubkey::find_program_address(
-            &[
-                &ctx.accounts.wallet.key().to_bytes(),
-                &ctx.accounts.token_mint_address.key().to_bytes(),
-                &ctx.accounts.token_program_id.key().to_bytes(),
-            ],
-            &ctx.accounts.program_id.key(),
-        ))
-    }
-}
-
-#[derive(Accounts)]
-pub struct ATA<'info> {
-    #[account(mut)]
-    pub wallet: AccountInfo<'info>,
-    #[account(mut)]
-    pub token_mint_address: UncheckedAccount<'info>,
-    pub token_program_id: Program<'info, Token>,
-    pub program_id: Program<'info, AssociatedToken>,
 }
 
 #[derive(Accounts)]

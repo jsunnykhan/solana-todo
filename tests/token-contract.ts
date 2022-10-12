@@ -56,6 +56,7 @@ describe("token-contract", () => {
       )
     );
 
+    console.log({ mint_tx });
     // sends and create the transaction
     const res = await anchor.AnchorProvider.env().sendAndConfirm(mint_tx, [
       mintKey,
@@ -68,6 +69,7 @@ describe("token-contract", () => {
     // console.log("Account: ", res);
     console.log("Mint key: ", mintKey.publicKey.toString());
     console.log("User: ", key.toString());
+    console.log("AssociatedTokenAccount: ", associatedTokenAccount.toString());
 
     // Executes our code to mint our token into our specified ATA
     await program.methods
@@ -100,9 +102,13 @@ describe("token-contract", () => {
       toWallet.publicKey
     );
 
+    console.log({ toAta: toATA.toString() });
+    console.log({ associatedTokenAccount: associatedTokenAccount.toString() });
+
     // Fires a list of instructions
     const mint_tx = new anchor.web3.Transaction().add(
       // Create the ATA account that is associated with our To wallet
+      
       createAssociatedTokenAccountInstruction(
         myWallet,
         toATA,

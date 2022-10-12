@@ -17,6 +17,7 @@ const Home: NextPage = () => {
     sendToken,
     findSeed,
     tokenProgram,
+    getAss,
     completeTodo,
   } = useTodo();
 
@@ -34,7 +35,7 @@ const Home: NextPage = () => {
   };
 
   useEffect(() => {
-    findSeed();
+    getAss();
   }, []);
 
   return (

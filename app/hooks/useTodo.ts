@@ -13,11 +13,12 @@ import { utf8 } from "@project-serum/anchor/dist/cjs/utils/bytes";
 import { authorFilter } from "../utils";
 import { SystemProgram, PublicKey } from "@solana/web3.js";
 import { todoType } from "../interface/todoInterface";
-import { BN } from "bn.js";
+import { BN, min } from "bn.js";
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
   TOKEN_2022_PROGRAM_ID,
+  getAssociatedTokenAddress,
 } from "@solana/spl-token";
 
 export const useTodo = () => {
@@ -98,6 +99,30 @@ export const useTodo = () => {
         setTransactionPending(false);
       }
     }
+  };
+
+  const getAss = async () => {
+    const user = new PublicKey("D2XVUR4RxyZkSNhFa5rvxURmnVX3xVUQLCtUvjeCCHj9");
+    const mint = new PublicKey("A9wzSjqfGPergsQSaSbQnaD7gdJCczYE6QVwwh3kCcz8");
+    const TOKEN_PROGRAM_ID = new PublicKey(
+      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    );
+    const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey(
+      "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+    );
+
+    const [address] = await PublicKey.findProgramAddress(
+      [user.toBuffer(), TOKEN_PROGRAM_ID.toBuffer(), mint.toBuffer()],
+      ASSOCIATED_TOKEN_PROGRAM_ID
+    );
+
+    // J8pTPSS5gtRkPk64JWM2Jbb5C86dZHHLbQ1AfCmoRTmA
+
+    const account = await getAssociatedTokenAddress(mint, user);
+    console.log(account.toString());
+    console.log(address.toString());
+
+    return address;
   };
 
   const addTodo = async () => {
@@ -289,6 +314,7 @@ export const useTodo = () => {
     sendToken,
     tokenProgram,
     findSeed,
+    getAss,
     completeTodo,
     pendingTodo,
   };
