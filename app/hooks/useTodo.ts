@@ -14,6 +14,11 @@ import { authorFilter } from "../utils";
 import { SystemProgram, PublicKey } from "@solana/web3.js";
 import { todoType } from "../interface/todoInterface";
 import { BN } from "bn.js";
+import {
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  TOKEN_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID,
+} from "@solana/spl-token";
 
 export const useTodo = () => {
   const { connection } = useConnection();
@@ -34,6 +39,13 @@ export const useTodo = () => {
     }
   }, [connection, anchorWallet]);
 
+  const tokenProgram = () => {
+    console.log({
+      TOKEN_PROGRAM_ID: TOKEN_PROGRAM_ID.toString(),
+      ASSOCIATED_TOKEN_PROGRAM_ID: ASSOCIATED_TOKEN_PROGRAM_ID.toString(),
+      TOKEN_2022_PROGRAM_ID: TOKEN_2022_PROGRAM_ID.toString(),
+    });
+  };
   const findTodoAccount = async () => {
     if (program && publicKey && !transactionPending) {
       try {
@@ -128,6 +140,15 @@ export const useTodo = () => {
         setTransactionPending(false);
       }
     }
+  };
+
+  const findSeed = async () => {
+    const [seeds, bump] = findProgramAddressSync(
+      [utf8.encode("TODO_STATE"), TOKEN_PROGRAM_ID.toBuffer()],
+      program?.programId!
+    );
+
+    console.log({ seeds: seeds.toString(), bump });
   };
 
   const markedTodo = async (idx: number) => {
@@ -266,6 +287,8 @@ export const useTodo = () => {
     removeTodo,
     updateTodo,
     sendToken,
+    tokenProgram,
+    findSeed,
     completeTodo,
     pendingTodo,
   };

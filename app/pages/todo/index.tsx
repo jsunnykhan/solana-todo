@@ -2,6 +2,7 @@ import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { NextPage } from "next";
 // import type { NextPage } from "next";
 import Head from "next/head";
+import { useEffect } from "react";
 import { useTodo } from "../../hooks/useTodo";
 import { todoType } from "../../interface/todoInterface";
 
@@ -14,6 +15,8 @@ const Home: NextPage = () => {
     removeTodo,
     updateTodo,
     sendToken,
+    findSeed,
+    tokenProgram,
     completeTodo,
   } = useTodo();
 
@@ -29,6 +32,10 @@ const Home: NextPage = () => {
       updateTodo(idx, data as string);
     }
   };
+
+  useEffect(() => {
+    findSeed();
+  }, []);
 
   return (
     <div>
