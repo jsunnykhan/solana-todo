@@ -137,8 +137,23 @@ export const useTodo = () => {
         console.log("MetaData Address : ", metadataAddress.toBase58());
         console.log("Master Eddition : ", masterEddition.toBase58());
 
+        const tx = await program.methods
+          .mintNFT(mintKey.publicKey, "google.com", "Mint #1")
+          .accounts({
+            mintAuthority: publicKey,
+            mint: mintKey.publicKey,
+            tokenProgram: TOKEN_PROGRAM_ID,
+            tokenAccount: nftTokenAccount,
+            metadata: metadataAddress,
+            tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
+            payer: publicKey,
+            systemProgram: SystemProgram.programId,
+            rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+            masterEddition: masterEddition,
+          })
+          .rpc();
 
-        const tx = await program.methods.mintNFT(mintKey.publicKey , "google.com" , "Mint #1").accounts().rpc();
+        console.log("Transaction : ", tx);
       }
     } catch (error) {
       console.error(error);
