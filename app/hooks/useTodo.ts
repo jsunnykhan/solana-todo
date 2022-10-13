@@ -122,6 +122,7 @@ export const useTodo = () => {
         const res = await program.provider.sendAndConfirm?.(mint_tx, [mintKey]);
 
         console.log(
+          "Account Info : ",
           await program.provider.connection.getParsedAccountInfo(
             mintKey.publicKey
           )
@@ -137,8 +138,21 @@ export const useTodo = () => {
         console.log("MetaData Address : ", metadataAddress.toBase58());
         console.log("Master Eddition : ", masterEddition.toBase58());
 
+        // const tx = await program.methods
+        //   .markTodo(idx)
+        //   .accounts({
+        //     userProfile: profilePda,
+        //     todoAccount: todoPda,
+        //     authority: publicKey,
+        //     systemProgram: SystemProgram.programId,
+        //   })
+        //   .rpc();
         const tx = await program.methods
-          .mintNFT(mintKey.publicKey, "google.com", "Mint #1")
+          .mintNft(
+            mintKey.publicKey,
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOTPA25yKeAESoJVjOwkFnlCuhUT2-qZG1whu6E4c&s",
+            "Mint #2"
+          )
           .accounts({
             mintAuthority: publicKey,
             mint: mintKey.publicKey,
@@ -149,7 +163,7 @@ export const useTodo = () => {
             payer: publicKey,
             systemProgram: SystemProgram.programId,
             rent: anchor.web3.SYSVAR_RENT_PUBKEY,
-            masterEddition: masterEddition,
+            masterEdition: masterEddition,
           })
           .rpc();
 
