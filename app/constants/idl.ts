@@ -1,96 +1,26 @@
 export const IDL = {
   version: "0.1.0",
-  name: "my_program",
-  constants: [
-    { name: "USER_TAG", type: { defined: "&[u8]" }, value: 'b"USER_STATE"' },
-    { name: "TODO_TAG", type: { defined: "&[u8]" }, value: 'b"TODO_STATE"' },
-  ],
+  name: "token_contract",
   instructions: [
     {
-      name: "initializeUser",
+      name: "mintNft",
       accounts: [
-        { name: "authority", isMut: true, isSigner: true },
-        { name: "userProfile", isMut: true, isSigner: false },
+        { name: "mintAuthority", isMut: true, isSigner: true },
+        { name: "mint", isMut: true, isSigner: false },
+        { name: "tokenProgram", isMut: false, isSigner: false },
+        { name: "metadata", isMut: true, isSigner: false },
+        { name: "tokenAccount", isMut: true, isSigner: false },
+        { name: "tokenMetadataProgram", isMut: false, isSigner: false },
+        { name: "payer", isMut: true, isSigner: false },
         { name: "systemProgram", isMut: false, isSigner: false },
-      ],
-      args: [],
-    },
-    {
-      name: "addTodo",
-      accounts: [
-        { name: "userProfile", isMut: true, isSigner: false },
-        { name: "todoAccount", isMut: true, isSigner: false },
-        { name: "authority", isMut: true, isSigner: true },
-        { name: "systemProgram", isMut: false, isSigner: false },
-      ],
-      args: [{ name: "content", type: "string" }],
-    },
-    {
-      name: "markTodo",
-      accounts: [
-        { name: "userProfile", isMut: true, isSigner: false },
-        { name: "todoAccount", isMut: true, isSigner: false },
-        { name: "authority", isMut: true, isSigner: true },
-        { name: "systemProgram", isMut: false, isSigner: false },
-      ],
-      args: [{ name: "todoIdx", type: "u8" }],
-    },
-    {
-      name: "removeTodo",
-      accounts: [
-        { name: "userProfile", isMut: true, isSigner: false },
-        { name: "todoAccount", isMut: true, isSigner: false },
-        { name: "authority", isMut: true, isSigner: true },
-        { name: "systemProgram", isMut: false, isSigner: false },
-      ],
-      args: [{ name: "todoIdx", type: "u8" }],
-    },
-    {
-      name: "updateTodo",
-      accounts: [
-        { name: "authority", isMut: true, isSigner: true },
-        { name: "todoAccount", isMut: true, isSigner: false },
-        { name: "systemProgram", isMut: false, isSigner: false },
+        { name: "rent", isMut: false, isSigner: false },
+        { name: "masterEdition", isMut: true, isSigner: false },
       ],
       args: [
-        { name: "todoIdx", type: "u8" },
-        { name: "content", type: "string" },
+        { name: "creatorKey", type: "publicKey" },
+        { name: "uri", type: "string" },
+        { name: "title", type: "string" },
       ],
     },
-    {
-      name: "sendToken",
-      accounts: [
-        { name: "from", isMut: true, isSigner: true },
-        { name: "to", isMut: true, isSigner: false },
-        { name: "systemProgram", isMut: false, isSigner: false },
-      ],
-      args: [{ name: "lamport", type: "u64" }],
-    },
   ],
-  accounts: [
-    {
-      name: "UserProfile",
-      type: {
-        kind: "struct",
-        fields: [
-          { name: "authority", type: "publicKey" },
-          { name: "lastTodo", type: "u8" },
-          { name: "todoCount", type: "u8" },
-        ],
-      },
-    },
-    {
-      name: "TodoAccount",
-      type: {
-        kind: "struct",
-        fields: [
-          { name: "authority", type: "publicKey" },
-          { name: "idx", type: "u8" },
-          { name: "content", type: "string" },
-          { name: "marked", type: "bool" },
-        ],
-      },
-    },
-  ],
-  errors: [{ code: 6000, name: "AlreadyMarked", msg: "Already Marked" }],
 };
